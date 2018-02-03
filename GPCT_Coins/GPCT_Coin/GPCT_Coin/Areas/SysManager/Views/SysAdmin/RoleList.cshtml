@@ -1,0 +1,211 @@
+﻿@{
+    ViewBag.Title = "RoleList";
+}
+@using System.Data;
+@model DataTable
+@using GPCT_Coin.Models;
+<style>
+    .fix:after
+    {
+        content: 'clear';
+        display: block;
+        height: 0;
+        visibility: hidden;
+        clear: both;
+        margin-top: 10px;
+        float: right;
+    }
+    #on
+    {
+        color: #FFF;
+        background-color: #337AB7;
+        border-color: #337AB7;
+    }
+    .pagination a
+    {
+        margin-right: 3px;
+        padding: 5px 10px;
+        font-size: 12px;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        display: inline-block;
+        border-radius: 3px;
+    }
+    a
+    {
+        color: #337ab7;
+        text-decoration: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $(".pagination .active").on("click", function () {
+            $("#page").val($(this).attr("page"));
+            $("#FormAdmin").submit();
+        });
+    });
+    function deL(id) {
+        if (confirm("您确定要删除？")) {
+            $.ajax({
+                type: "POST",
+                url: "/SysManager/SysAdmin/DeleteRole",
+                data: {
+                    ID: id
+                },
+                success: function (data) {
+                    if (data.Result) {
+                        $.Huimodalalert('删除成功！', 2000);
+                        setTimeoutReplace();
+                    } else {
+                        $.Huimodalalert(data.Msg, 2000)
+                    }
+                }
+            });
+        }
+    }
+
+    function deLBatch() {
+        if (confirm("您确定要删除？")) {
+            var idList = "";
+            $("[name='IDList']:checked").each(function (index, element) {
+                idList += $(this).val() + ",";
+            });
+            $.ajax({
+                type: "POST",
+                url: "/SysManager/SysAdmin/DeleteRole",
+                data: {
+                    ID: idList
+                },
+                success: function (data) {
+                    if (data.Result) {
+                        $.Huimodalalert('删除成功！', 2000);
+                        setTimeoutReplace();
+                    } else {
+                        $.Huimodalalert(data.Msg, 2000)
+                    }
+                }
+            });
+        }
+    }
+
+    function setTimeoutReplace() {
+        setTimeout(function () {
+            location.replace(location.href);
+        }, 1000);
+    }
+
+    function checkAll() {
+        if ($(this).checked) {
+            $("[name='IDList']").attr("checked", "");
+        } else {
+            $("[name='IDList']").attr("checked", "checked");
+        }
+    }
+
+    function checkOut() {
+        var isCheck = true; //是否全选
+        $("[name='IDList']").each(function (index, element) {
+            if (!$(this).is(':checked')) {
+                isCheck = false;
+            }
+        });
+        if (isCheck) {
+            $(".checkFrist").attr("checked", "checked");
+        } else {
+            $(".checkFrist").attr("checked", "");
+        }
+    } 
+</script>
+<form action="/SysManager/SysAdmin/Index" method="post" id="FormAdmin">
+<input type="hidden" id="page" name="page" value="@PagingHelper.CurrentPage" />
+<input type="hidden" name="hidSearchBy" value="@ViewData["SearchBy"]" id="hidSearchBy" />
+<input type="hidden" name="hidkeyWord" value="@ViewData["keyWord"]" id="hidkeyWord" />
+<header class="CP_header">
+		<img class="Log_img1" src="/Areas/Admin/images/fz.png" alt="">首页 > 角色管理
+		<a href="javascript:history.go(-1)" style="float:right;"><button class="btn btn-primary radius size-S" style="margin-top:-6px;">返回</button></a>
+		<a class="btn btn-success radius r size-S mr-20" style="line-height:1.6em;" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+</header>
+<div class="CP_content"> 
+    <div class="C_lm">
+        <a href="javascript:void(0)" onclick="deLBatch();">
+            <button type="button" class="btn btn-danger radius size-S C_but1">
+                <i class="Hui-iconfont" style="margin-right: 2px;">&#xe6e2;</i>批量删除</button>
+        </a>&nbsp; @*<a href="javascript:void(0)" onclick="deL();">
+            <button type="button" class="btn btn-secondary radius size-S C_but1">
+                <i class="Hui-iconfont" style="margin-right: 2px;">&#xe6e2;</i>批量审核</button>
+        </a>*@&nbsp; <a href="/SysAdmin/AddRoleView">
+            <button type="button" class="btn btn-secondary radius size-S C_but1">
+                <i class="Hui-iconfont" style="margin-right: 2px;">&#xe600;</i>添加</button></a>
+        <div style="float: right; font-size: 15px; line-height: 32px; margin-right: 10px;">
+            共有数据：<b>@PagingHelper.TotalCount</b>&nbsp;条</div>
+    </div>
+    <div class="C_list">
+        <table class="table table-border table-bordered table-condensed table-hover C_tab1">
+            <thead>
+                <tr style="background: #F5F5F5;">
+                    <th style="width: 22px;">
+                        <input class="M_inp1 .checkFrist" type="checkbox" onclick="checkAll()" />
+                    </th>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        角色名
+                    </th>
+                    <th>
+                        角色使用账户
+                    </th>
+                    <th>
+                        描述
+                    </th> 
+                    <th>
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    if (Model.Rows.Count > 0)
+                    {
+                        foreach (DataRow item in Model.Rows)
+                        {
+                    <tr>
+                        <td>
+                            <input class="M_inp1 IDList" name="IDList" value="@item["ID"]" type="checkbox" onclick="checkOut()"/>
+                        </td>
+                        <td>
+                            @item["ID"]
+                        </td> 
+                        <td>
+                            @item["RoleName"]
+                        </td>
+                        <td>
+                            @item["SysAdmins"]
+                        </td>
+                        <td>
+                            @item["Description"]
+                        </td> 
+                        <td>
+                            <a href="/SysManager/SysAdmin/UpdateRoleView/?raid=@item["ID"]" title="修改"><i class="Hui-iconfont" style="margin-right: 8px;">
+                                &#xe6df;</i></a> <a href="Javascript:void(0);" onclick="deL(@item["ID"]);" title="删除">
+                                    <i class="Hui-iconfont">&#xe6e2;</i></a>
+                        </td>
+                    </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="fix">
+            <div class="page" style="float: right; margin-left: 20px;">
+                <div class="pagination pagination-sm pull-right" id="pageDiv" style="margin: 5px 0;">
+                    @Html.Paging(new { @class = "active" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

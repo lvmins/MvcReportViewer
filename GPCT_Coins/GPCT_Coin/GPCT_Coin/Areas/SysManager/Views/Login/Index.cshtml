@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<script src="/Scripts/jquery-1.10.2.min.js"></script> 
+<link href="/css/H-ui.css" rel="stylesheet" />
+<link href="/css/H-ui.admin.css" rel="stylesheet" /> 
+<link href="/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #D6DEE0;
+    }
+
+    .box {
+        height: 940px;
+        background: url(/images/login.jpg) no-repeat 0 center;
+    }
+
+    .content {
+        width: 650px;
+        margin-left: 635px;
+        padding-top: 30px;
+    }
+
+    .B_title {
+        width: 400px;
+        margin: 0 auto;
+        font-size: 30px;
+        color: #2170CC;
+        text-align: center;
+        padding-top: 80px;
+        letter-spacing: 2px;
+    }
+
+    .B_con {
+        width: 640px;
+        text-align: center;
+        padding-top: 180px;
+        font-size: 30px;
+        margin-top: -20px;
+        font-weight: bold;
+        color: #4585CD;
+        font-family: "Arial";
+    }
+
+    .C_inp {
+        width: 540px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .C_left {
+        width: 180px;
+        float: left;
+        text-align: center;
+        line-height: 160px;
+        margin: -30px 0 0 -25px;
+        opacity: 0.8;
+    }
+
+    .C_right {
+        width: 350px;
+        height: 160px;
+        float: right;
+        text-align: center;
+    }
+
+    .r_tab {
+        width: 350px;
+        height: 160px;
+    }
+
+        .r_tab .td1 {
+            font-size: 19px;
+            text-align: center;
+            width: 90px;
+        }
+
+        .r_tab .but1 {
+            width: 220px;
+            font-size: 18px;
+            height: 32px;
+            text-align: center;
+        }
+</style>
+<body>
+    <form method="post" action="/SysManager/Login/Login">
+        <div class="box">
+            <div class="content">
+                <div class="B_title">
+                    后台系统
+                </div>
+                <div class="B_con">
+                    <img src="/images/logo123.png" alt="">
+                </div>
+                <div class="C_inp">
+                    <div class="C_left">
+                        <img src="/images/mf.png" alt="">
+                    </div>
+                    <div class="C_right">
+                        <table class="r_tab">
+                            <tr>
+                                <td style="width: 20px;">
+                                    <img class="tab_img1" src="/images/tx.png" alt="">
+                                </td>
+                                <td class="td1">
+                                    登录名：
+                                </td>
+                                <td>
+                                    <input type="text" name="LoginName" class="input-text size-M">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 18px;">
+                                    <img class="tab_img1" src="/images/suo.png" alt="">
+                                </td>
+                                <td class="td1">
+                                    密&nbsp;&nbsp;&nbsp;码：
+                                </td>
+                                <td>
+                                    <input type="password" name="Password" class="input-text size-M">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <button class="btn btn-primary radius but1">
+                                        登&nbsp;&nbsp;&nbsp;陆
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="clear" style="clear: both;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+@*<script>
+        function changeCheckCode() {
+            $("#imgCode").attr("src", $("#imgCode").attr("src") + 1);  //id=2
+        }
+    </script>
+    <img id="imgCode" src="/Login/ShowValidateCode/?id=1" style="float: left; height: 24px;"
+        onclick="changeCheckCode();return false;" />
+    <a href="javascript:void(0)" onclick="changeCheckCode();return false;">看不清，换一张</a>*@

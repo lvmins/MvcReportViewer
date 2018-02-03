@@ -1,0 +1,349 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension=".cshtml" #>
+<#@ include file="Imports.include.t4" #>
+<#
+// The following chained if-statement outputs the file header code and markup for a partial view, a view using a layout page, or a regular view.
+if(IsPartialView) {
+#>
+
+<#
+} else if(IsLayoutPageSelected) {
+#>
+
+@{
+    ViewBag.Title = "<#= ViewName#>";
+<#
+if (!String.IsNullOrEmpty(LayoutPageFile)) {
+#>
+    Layout = "<#= LayoutPageFile#>";
+<#
+}
+#>
+} 
+@using Admin.Models;
+@using System.Data;
+@model List<Model.<#= ViewDataTypeShortName #>>
+
+<style>
+    .fix:after {
+        content: 'clear';
+        display: block;
+        height: 0;
+        visibility: hidden;
+        clear: both;
+        margin-top: 10px;
+        float: right;
+    }
+
+    #on {
+        color: #FFF;
+        background-color: #337AB7;
+        border-color: #337AB7;
+    }
+
+    .pagination a {
+        margin-right: 3px;
+        padding: 5px 10px;
+        font-size: 12px;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        display: inline-block;
+        border-radius: 3px;
+    }
+
+    a {
+        color: #337ab7;
+        text-decoration: none;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $(".pagination .active").on("click", function () {
+            $("#page").val($(this).attr("page"));
+            $("#Form<#= ViewDataTypeShortName #>").submit();
+        });
+    });
+    function deL(id) {
+        if (confirm("您确定要删除？")) {
+            $.ajax({
+                type: "POST",
+                url: "/<#= ViewDataTypeShortName #>/Delete<#= ViewDataTypeShortName #>",
+                data: {
+                    aid: id
+                },
+                success: function (data) {
+                    if (data.Result) {
+                        $.Huimodalalert('删除成功！', 2000);
+                        setTimeoutReplace();
+                    } else {
+                        $.Huimodalalert(data.Msg, 2000)
+                    }
+                }
+            });
+        }
+    }
+
+    function deLBatch() {
+        if (confirm("您确定要删除？")) {
+            var idList = "";
+            $("[name='arcList']:checked").each(function (index, element) {
+                idList += $(this).val() + ",";
+            });
+            $.ajax({
+                type: "POST",
+                url: "/<#= ViewDataTypeShortName #>/Delete<#= ViewDataTypeShortName #>",
+                data: {
+                    aid: idList
+                },
+                success: function (data) {
+                    if (data.Result) {
+                        $.Huimodalalert('删除成功！', 2000);
+                        setTimeoutReplace();
+                    } else {
+                        $.Huimodalalert(data.Msg, 2000)
+                    }
+                }
+            });
+        }
+    }
+
+    function AuditArc(id, state) {
+        if (confirm("您确定要更改状态？")) {
+            $.ajax({
+                type: "POST",
+                url: "/<#= ViewDataTypeShortName #>/Audit<#= ViewDataTypeShortName #>",
+                data: {
+                    aid: id,
+                    state: state
+                },
+                success: function (data) {
+                    if (data.Result) {
+                        $.Huimodalalert('更改成功！', 2000);
+                        setTimeoutReplace();
+                    } else {
+                        $.Huimodalalert(data.Msg, 2000)
+                    }
+                }
+            });
+        }
+    }
+
+    function setTimeoutReplace() {
+        setTimeout(function () {
+            location.replace(location.href);
+        }, 1000);
+    }
+
+    function checkAll() {
+        if ($(this).checked) {
+            $("[name='arcList']").attr("checked", "");
+        } else {
+            $("[name='arcList']").attr("checked", "checked");
+        }
+    }
+
+    function checkOut() {
+        var isCheck = true; //是否全选
+        $("[name='arcList']").each(function (index, element) {
+            if (!$(this).is(':checked')) {
+                isCheck = false;
+            }
+        });
+        if (isCheck) {
+            $(".checkFrist").attr("checked", "checked");
+        } else {
+            $(".checkFrist").attr("checked", "");
+        }
+    }
+
+    $(document).ready(function () {
+        readyLevel();
+        readySearch();
+    });
+
+    function readyLevel() {
+        $("select#SearchBy").change(function () {
+            if ($(this).val() == "VIPLevel") {
+                $("#keyWord").remove();
+                $(".inp1").after("<span class=\"select-box inp1 key3\"><select style= \"color: #888; font - size: 12px; \" class=\"select\" id= \"keyWord\" size= \"1\" name= \"keyWord\" ></select></span>");
+                $("#keyWord").append("<option value= \"0\" selected>普通</option >");
+                $("#keyWord").append("<option value=\"1\">VIP</option>");
+                $("#keyWord").append("<option value=\"2\">创客</option>");
+                $("#keyWord").append("<option value=\"3\">合伙人</option>");
+                $("#keyWord").append("<option value=\"4\">工作室</option>");
+                $("#keyWord").append("<option value=\"5\">县级</option>");
+                $("#keyWord").append("<option value=\"6\">市级</option>");
+                $("#keyWord").append("<option value=\"7\">省级</option>");
+            } else { 
+                $("#keyWord").remove();
+                $(".key3").remove(); 
+                $(".inp1").after("<input class=\"input-text inp2 key1\" type=\"text\" name=\"keyWord\" id=\"keyWord\" />");
+            }
+        });
+    }
+
+    function readySearch() {
+        $("#SearchBy").val($("#hidSearchBy").val());
+        $("#keyWord").val($("#hidkeyWord").val());
+    } 
+</script> 
+<#
+} else {
+#>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title><#= ViewName #></title>
+</head>
+<body>
+<#
+    PushIndent("    ");
+}
+#> 
+
+ <form action="/<#= ViewDataTypeShortName #>/<#= ViewName #>" method="post" id="Form<#= ViewName #>">
+    <input type="hidden" id="page" name="page" value="@PagingHelper.CurrentPage" />
+    <input type="hidden" name="hidSearchBy" value="@ViewData["SearchBy"]" id="hidSearchBy" />
+    <input type="hidden" name="hidkeyWord" value="@ViewData["keyWord"]" id="hidkeyWord" />
+    <header class="CP_header">
+        <img class="Log_img1" src="../../images/fz.png" alt="">首页 > 产品列表
+        <a href="javascript:history.go(-1)" style="float:right;"><button class="btn btn-primary radius size-S" style="margin-top:-6px;">返回</button></a>
+        <a class="btn btn-success radius r size-S mr-20" style="line-height:1.6em;" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+    </header>
+    <div class="CP_content">
+        <div class="C_ss">
+            <span class="select-box inp1">
+                <select style="color: #888; font-size: 12px;" class="select" id="SearchBy" size="1" name="SearchBy">
+                    <option value="" selected disabled="disabled">--请选择--</option>
+                    <option value=""></option>
+                    <option value=""></option>
+                </select>
+            </span>&nbsp;
+            <input class="input-text inp2" type="text" name="keyWord" id="keyWord" />&nbsp;
+            <button type="submit" class="btn btn-secondary size-S C_but1">
+                <i class="Hui-iconfont" style="margin-right: 2px;">&#xe665;</i>搜索
+            </button>
+        </div>
+        <div class="C_lm">
+            <a href="javascript:void(0)" onclick="deLBatch();">
+                <button type="button" class="btn btn-danger radius size-S C_but1">
+                    <i class="Hui-iconfont" style="margin-right: 2px;">&#xe6e2;</i>批量删除
+                </button>
+            </a>&nbsp; @*<a href="javascript:void(0)" onclick="deL();">
+                    <button type="button" class="btn btn-secondary radius size-S C_but1">
+                        <i class="Hui-iconfont" style="margin-right: 2px;">&#xe6e2;</i>批量审核</button>
+                </a>*@&nbsp; <a href="/<#= ViewDataTypeShortName #>/Add<#= ViewDataTypeShortName #>">
+                <button type="button" class="btn btn-secondary radius size-S C_but1">
+                    <i class="Hui-iconfont" style="margin-right: 2px;">&#xe600;</i>添加
+                </button>
+            </a>
+            <div style="float: right; font-size: 15px; line-height: 32px; margin-right: 10px;">
+                共有数据：<b>@PagingHelper.TotalCount</b>&nbsp;条
+            </div>
+        </div>
+        <div class="C_list">
+            <table class="table table-border table-bordered table-condensed table-hover C_tab1">
+                <thead>
+                    <tr style="background: #F5F5F5;">
+                        <th style="width: 22px;">
+                            <input class="M_inp1 .checkFrist" type="checkbox" onclick="checkAll()" />
+                        </th>
+						<th>
+							ID
+						</th>
+						<#
+						foreach (PropertyMetadata property in ModelMetadata.Properties) {
+							if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
+						#>
+						<#
+									 if (property.IsAssociation && GetRelatedModelMetadata(property) == null) {
+									continue;
+								}
+						#>
+                        <th>
+                            <#= GetValueExpression(property) #>
+                        </th> 
+						<#
+							}
+						}
+						#>  
+                        <th width="6%">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        if (Model.Count > 0)
+                        {
+                            foreach (Model.<#= ViewDataTypeShortName #> item in Model)
+                            {
+                                <tr id="@item.ID">
+                                    <td>
+                                        <input class="M_inp1 arcList" name="arcList" value="@item.ID" type="checkbox" onclick="checkOut()" />
+                                    </td>
+									 <td>
+										@item.ID
+                                    </td>
+									<#
+									foreach (PropertyMetadata property in ModelMetadata.Properties) {
+										if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
+									#>
+									<#
+												 if (property.IsAssociation && GetRelatedModelMetadata(property) == null) {
+												continue;
+											}
+									#>
+                                    <td>
+                                        @item.<#= GetValueExpression(property) #>
+                                    </td>
+									<#
+										}
+									}
+									#>  
+                                    <td>
+                                        <a href="Javascript:void(0);" onclick="AuditArc(@item.ID,@(item.Valid != false ? 1 : 0));" title="审核">
+                                            <i class="Hui-iconfont" style="margin-right: 8px;">&#xe6a8;</i>
+                                        </a> <a href="/<#= ViewDataTypeShortName #>/Edit<#= ViewDataTypeShortName #>View/@item.ID" title="修改">
+                                            <i class="Hui-iconfont" style="margin-right: 8px;">&#xe6df;</i>
+                                        </a> <a href="Javascript:void(0);" onclick="deL(@item.ID);" title="删除">
+                                            <i class="Hui-iconfont">&#xe6e2;</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+            <div class="fix">
+                <div class="page" style="float: right; margin-left: 20px;">
+                    <div class="pagination pagination-sm pull-right" id="pageDiv" style="margin: 5px 0;">
+                        @Html.Paging(new { @class = "active" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form> 
+<#
+// The following code closes the tag used in the case of a view using a layout page and the body and html tags in the case of a regular view page
+#>
+<#
+if(!IsPartialView && !IsLayoutPageSelected) {
+    ClearIndent();
+#> 
+<#
+}
+#>
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

@@ -1,0 +1,98 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension=".cshtml" #>
+<#@ include file="Imports.include.t4" #>
+<#
+// The following chained if-statement outputs the file header code and markup for a partial view, a view using a layout page, or a regular view.
+if(IsPartialView) {
+#>
+
+<#
+} else if(IsLayoutPageSelected) {
+#>
+
+@{
+    ViewBag.Title = "<#= ViewName#>";
+<#
+if (!String.IsNullOrEmpty(LayoutPageFile)) {
+#>
+    Layout = "<#= LayoutPageFile#>";
+<#
+}
+#>
+}
+
+<#
+} else {
+#>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title><#= ViewName #></title>
+</head>
+<body>
+<#
+    PushIndent("    ");
+}
+#>
+<header class="CP_header" style="border: 1px solid #eee;">
+    首页 > 管理 > 添加
+    <a href="javascript:history.go(-1)" style="float:right;"><button class="btn btn-primary radius size-S" style="margin-top:-6px;">返回</button></a>
+    <a class="btn btn-success radius r size-S mr-20" style="line-height:1.6em;" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+</header>
+<div class="CP_input">
+    <div class="panel panel-default">
+        <div class="panel-header">
+            添加
+        </div>
+        <div class="panel-body">
+            <form action="/<#= ViewDataTypeShortName #>/<#= ViewName #>" method="post" class="form form-horizontal responsive" id="demoform">
+<#
+foreach (PropertyMetadata property in ModelMetadata.Properties) {
+    if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
+#>
+<#
+			 if (property.IsAssociation && GetRelatedModelMetadata(property) == null) {
+            continue;
+        }
+#>
+			<div class="row cl">
+                    <label class="form-label col-xs-3">
+                        <#= GetValueExpression(property) #>：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" placeholder="" name="<#= GetValueExpression(property) #>" id="<#= GetValueExpression(property) #>" autocomplete="off" />
+                    </div>
+                </div>
+
+<#
+    }
+}
+#> 
+				<div class="row cl">
+                    <div class="col-xs-8 col-xs-offset-3">
+                        <input class="btn btn-primary" type="button" onclick="CreateProduct()" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+ 
+<#
+// The following code closes the tag used in the case of a view using a layout page and the body and html tags in the case of a regular view page
+#>
+<#
+if(!IsPartialView && !IsLayoutPageSelected) {
+    ClearIndent();
+#> 
+<#
+}
+#>
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>

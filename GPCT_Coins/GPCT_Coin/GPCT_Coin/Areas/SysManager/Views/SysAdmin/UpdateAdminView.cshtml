@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "UpdateAdminView";
+}
+@model GPCT_Coin.Models.SysAdminRequest
+<script src="/Areas/Admin/js/ajaxfileupload.js" type="text/javascript"></script>
+<header class="CP_header" style="border: 1px solid #eee;">
+    首页 > 管理员管理 > 管理员修改
+    <a href="javascript:history.go(-1)" style="float:right;"><button class="btn btn-primary radius size-S" style="margin-top:-6px;">返回</button></a>
+    <a class="btn btn-success radius r size-S mr-20" style="line-height:1.6em;" href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+</header>
+<div class="CP_input">
+    <div class="panel panel-default">
+        <div class="panel-header">
+            管理员修改
+        </div>
+        <div class="panel-body">
+            <form action="/SysAdmin/AddAdmin" method="post" class="form form-horizontal responsive"
+                  id="demoform">
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        姓名：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" placeholder="" name="UserName" id="UserName" autocomplete="off" value="@Model.UserName" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        权限角色：
+                    </label>
+                    <div class="formControls col-xs-4" id="RoleItem">
+                        @* <input type="text" class="input-text" placeholder="" name="RoleName" id="RoleName" />*@
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        地址：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" autocomplete="off" placeholder="" name="Area" value="@Model.Area"
+                               id="Area" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        微信号：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" autocomplete="off" placeholder="" name="WebChatAccount" value="@Model.WebChatAccount"
+                               id="WebChatAccount" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        登录账号：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" autocomplete="off" placeholder="" name="LoginAccount" value="@Model.LoginAccount"
+                               id="LoginAccount" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        密码：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="password" class="input-text" autocomplete="off" placeholder="" name="Password" value=""
+                               id="Password" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        确认密码：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="password" class="input-text" autocomplete="off" placeholder="" name="RePassword" value=""
+                               id="RePassword" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        性别：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" autocomplete="off" placeholder="" name="Gender" value="@Model.Gender"
+                               id="Gender" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        电话号码：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" autocomplete="off" placeholder="" name="PhoneNumber" value="@Model.PhoneNumber"
+                               id="PhoneNumber" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-3">
+                        邮箱：
+                    </label>
+                    <div class="formControls col-xs-8">
+                        <input type="text" class="input-text" autocomplete="off" placeholder="" name="Email" value="@Model.Email"
+                               id="Email" />
+                    </div>
+                </div>
+                <div class="row cl">
+                    <div class="col-xs-8 col-xs-offset-3">
+                        <input class="btn btn-primary" type="button" onclick="UpdateAdmin()" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" />
+                    </div>
+                </div>
+                <input type="hidden" id="hidID" value="@Model.ID" />
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        LoadRoleItem();
+    });
+
+    function LoadRoleItem() {
+        $("#RoleItem").load("/SysManager/SysAdmin/RoleItem", { rand: Math.random() }, function () {
+
+        });
+    }
+
+    function UpdateAdmin() {
+        var hidID = $("#hidID").val();
+        var UserName = $("#UserName").val();
+        var RoleId = $("#RoleId").val();
+        var WebChatAccount = $("#WebChatAccount").val();
+        var LoginAccount = $("#LoginAccount").val();
+        var Password = $("#Password").val();
+        var RePassword = $("#RePassword").val();
+        var Gender = $("#Gender").val();
+        var Email = $("#Email").val();
+        var PhoneNumber = $("#PhoneNumber").val();
+        var Area = $("#Area").val();
+        if (LoginAccount == "") {
+            $.Huimodalalert('请填写登录名！', 2000)
+            return;
+        }
+        if (Password != "") {
+            if (RePassword == "") {
+                $.Huimodalalert('请填写确认密码！', 2000)
+                return;
+            }
+            if (Password != RePassword) {
+                $.Huimodalalert('两次填写的密码不相同！', 2000)
+                return;
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/SysManager/SysAdmin/UpdateAdmin",
+            data: {
+                ID: hidID,
+                UserName: UserName,
+                RoleId: RoleId,
+                WebChatAccount: WebChatAccount,
+                LoginAccount: LoginAccount,
+                Password: Password,
+                Gender: Gender,
+                Email: Email,
+                PhoneNumber: PhoneNumber,
+                Area: Area
+            },
+            success: function (data) {
+                if (data.Result) {
+                    $.Huimodalalert('提交成功！', 2000)
+                } else {
+                    $.Huimodalalert(data.Msg, 2000)
+                }
+            }
+        });
+    }
+</script>

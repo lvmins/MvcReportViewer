@@ -1,0 +1,70 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension="cs" #>
+<#@ parameter type="System.String" name="ControllerName" #>
+<#@ parameter type="System.String" name="ControllerRootName" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.String" name="AreaName" #>
+<#
+string routePrefix;
+if (String.IsNullOrEmpty(AreaName)) 
+{
+    routePrefix = ControllerRootName;
+}
+else
+{
+    routePrefix = AreaName + "/" + ControllerRootName;
+}
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace <#= Namespace #>
+{
+    public class <#= ControllerName #> : Controller
+    {
+        // GET: <#= routePrefix #>
+        LinkBLL bll;
+        public LinkController()
+        {
+            bll = new LinkBLL();
+        }
+        // GET: Link
+        public ActionResult Index(int? page, string SearchBy, string keyWord)
+        {
+            PagingHelper.CurrentPage = page ?? 1;
+            PagingHelper.PageSize = 10;
+            int count = 0;
+            ViewData["SearchBy"] = SearchBy;
+            ViewData["keyWord"] = keyWord;
+            string strSql = "";
+            if (!string.IsNullOrEmpty(keyWord) && !string.IsNullOrEmpty(SearchBy))
+            {
+                if (SearchBy == "Title")
+                {
+                    strSql += " and " + SearchBy.Trim() + " like N'%" + keyWord.Trim() + "%'";
+                }
+                else if (SearchBy == "CategoryName")
+                {
+                    strSql += " and " + SearchBy.Trim() + " like N'%" + keyWord.Trim() + "%'";
+                }
+                else
+                {
+                    strSql += " and " + SearchBy.Trim() + " like N'%" + keyWord.Trim() + "%'";
+                }
+            }
+            List<Link> dts = bll.GetLinkList(" " + strSql, PagingHelper.CurrentPage, PagingHelper.PageSize, out count);
+            PagingHelper.TotalCount = count;
+
+            return View(dts);
+        }
+		 
+        public ActionResult AddLinkView()
+        {
+            return View();
+        }
+		 
+    }
+}

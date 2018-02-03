@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "UpdateRoleAuthorizeView";
+}
+@model GPCT_Coin.Models.RoleAuthorizeRequest
+<header class="CP_header" style="border: 1px solid #eee;">
+		 首页 > 权限管理 > 权限修改
+		<a href="javascript:history.go(-1)" style="float:right;"><button class="btn btn-primary radius size-S" style="margin-top:-6px;">返回</button></a>
+		<a class="btn btn-success radius r size-S mr-20" style="line-height:1.6em;" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+	</header>
+<div class="CP_input">
+    <div class="panel panel-default">
+        <div class="panel-header">
+            权限修改</div>
+        <div class="panel-body">
+            <form action="/SysManager/SysAdmin/UpdateRoleAuthorizeView" method="post" class="form form-horizontal responsive"
+            id="demoform">
+            <div class="row cl">
+                <label class="form-label col-xs-3">
+                    权限名称：</label>
+                <div class="formControls col-xs-8">
+                    <input type="text" class="input-text" placeholder="" name="Name" id="Name" autocomplete="off" value="@Model.Name" />
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3">
+                    控制器：</label>
+                <div class="formControls col-xs-8">
+                    <input type="text" class="input-text" autocomplete="off" placeholder="" name="ControllerName" value="@Model.ControllerName"
+                        id="ControllerName" />
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3">
+                    方法：</label>
+                <div class="formControls col-xs-8">
+                    <input type="text" class="input-text" autocomplete="off" placeholder="" name="ActionName" value="@Model.ActionName"
+                        id="ActionName" />
+                </div>
+            </div>
+            <input type="hidden" name="ID" id="ID" value="@Model.ID"/>
+            <div class="row cl">
+                <div class="col-xs-8 col-xs-offset-3">
+                    <input class="btn btn-primary" type="button" onclick="UpdateRoleAuthorize()" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" />
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">  
+    function UpdateRoleAuthorize() {
+        var ID = $("#ID").val();
+        var Name = $("#Name").val();
+        var ControllerName = $("#ControllerName").val();
+        var ActionName = $("#ActionName").val();
+        if (ID == "") {
+            $.Huimodalalert('获取参数异常，请重新进入！', 2000)
+            return;
+        }
+        if (Name == "") {
+            $.Huimodalalert('请填写权限名称！', 2000)
+            return;
+        }
+        if (ControllerName == "") {
+            $.Huimodalalert('请填写控制器名！', 2000)
+            return;
+        }
+        if (ActionName == "") {
+            $.Huimodalalert('请填写方法名！', 2000)
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/SysManager/SysAdmin/UpdateRoleAuthorize",
+            data: {
+                ID: ID,
+                Name: Name,
+                ControllerName: ControllerName,
+                ActionName: ActionName
+            },
+            success: function (data) {
+                if (data.Result) {
+                    $.Huimodalalert('提交成功！', 2000);
+                    setTimeoutReplace();
+                } else {
+                    $.Huimodalalert(data.Msg, 2000)
+                }
+            }
+        });
+    }
+    function setTimeoutReplace() {
+        setTimeout(function () {
+            location.replace(location.href);
+        }, 1000);
+    }
+</script>

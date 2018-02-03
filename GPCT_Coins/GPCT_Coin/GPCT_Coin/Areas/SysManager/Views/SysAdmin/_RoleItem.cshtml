@@ -1,0 +1,15 @@
+﻿@{ 
+    Layout = null;
+}
+@using Model;
+@model IEnumerable<Coin_Role>
+@{
+    <span class="select-box">
+        <select class="select valid" id="RoleId" size="1" name="RoleId">
+            @foreach (Coin_Role item in Model)
+            {  
+                <option value="@item.ID">&nbsp;&nbsp;@item.RoleName</option>  
+            }
+        </select>
+    </span>
+}

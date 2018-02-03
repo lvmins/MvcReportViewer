@@ -1,0 +1,15 @@
+﻿@{ 
+    Layout = null;
+}
+@using Model;
+@model IEnumerable<Coin_RoleAuthorize>
+@{
+    <dd>
+        @foreach (Coin_RoleAuthorize item in Model)
+        {  
+            <label class="">
+                <input type="checkbox" value="@item.ID" name="RoleAuthorize"/>
+                @item.Name</label>
+        }
+    </dd>
+}

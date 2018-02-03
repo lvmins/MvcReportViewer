@@ -1,0 +1,35 @@
+body{margin:0;padding: 0;}
+a:hover{text-decoration: none;}
+.TITLE{line-height: 44px;margin-left:50px;letter-spacing: 1px;}
+
+/*产品编辑*/
+.CP_header{background:#F5F5F5;padding: 4px 10px;font-size:13px;line-height:28px;}
+.H_but{float: right;margin:-2px 6px 0 0;}
+.CP_content{padding:10px 20px;}
+.C_ss{text-align: center;}
+.C_ss .inp1{width: 90px;height: 27px;}
+.C_ss .inp2{width: 200px;height: 27px;}
+.C_but1{color:#fff;margin-top: -2px;}
+.C_but1:hover{color:#fff;}
+.C_lm{background:#F5FAFE;padding:8px;border:1px solid #eee;margin-top:15px;}
+.C_list .inp3{width:44px;padding:0;height:24px;margin:0 5px;margin-top: -3px;}
+.C_tab1{margin-top:15px;}
+.C_tab1 th{text-align: center;}
+.C_tab1 td{text-align: center;}
+
+
+
+
+
+
+
+
+
+
+
+/*-------- 通用样式 ---------*/
+.Log_img1{width: 14px;height: 14px;margin:-3px 3px 0 0;}
+.M_inp1{margin-left:3px;}
+.M_inp2{line-height: 5px;margin:20px 0;}
+/*分页*/
+.FY_but{margin:0 3px; padding:4px 12px; border:1px solid #999;border-radius:2px;font-size: 14px;text-align: center;color:#999;background: none;cursor:pointer;}

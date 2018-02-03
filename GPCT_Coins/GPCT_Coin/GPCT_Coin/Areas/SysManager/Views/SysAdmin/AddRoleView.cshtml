@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "AddRoleView";
+}
+<header class="CP_header" style="border: 1px solid #eee;">
+		 首页 > 管理员管理 > 角色添加
+		<a href="javascript:history.go(-1)" style="float:right;"><button class="btn btn-primary radius size-S" style="margin-top:-6px;">返回</button></a>
+		<a class="btn btn-success radius r size-S mr-20" style="line-height:1.6em;" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+	</header>
+<div class="CP_input">
+    <div class="panel panel-default">
+        <div class="panel-header">
+            角色添加</div>
+        <div class="panel-body">
+            <form action="" method="post" class="form form-horizontal" id="form-admin-role-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>角色名称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="RoleName" name="RoleName">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    备注：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="Description" name="Description">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                   角色授权：</label>
+                <div class="formControls col-xs-8 col-sm-9"> 
+                    <dl class="permission-list">
+                        <dt>
+                            <label>
+                                <input type="checkbox" value="" name="user-Character-0" id="user-Character-1"/>
+                                全选</label>
+                        </dt>
+                        <dd>
+                            <dl class="cl permission-list2">
+                                
+                            </dl>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-xs-offset-3">
+                    <input class="btn btn-primary" type="button" onclick="AddRole()" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" />
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script> 
+    $(document).ready(function () {
+        $(".permission-list dt input:checkbox").click(function () {
+            $(this).closest("dl").find("dd input:checkbox").prop("checked", $(this).prop("checked"));
+        });
+        LoadRoleAuthorizeItem();
+    });
+
+    function LoadRoleAuthorizeItem() {
+        $(".permission-list2").load("/SysManager/SysAdmin/RoleAuthorizeItem", { rand: Math.random() }, function () {
+
+        });
+    }
+
+    function AddRole() {
+        var RoleName = $("#RoleName").val();
+        var Description = $("#Description").val();
+        var RoleAuthorize = "";
+        $("[name='RoleAuthorize']:checked").each(function (index, element) {
+            RoleAuthorize += $(this).val() + ",";
+        }); 
+        if (RoleName == "") {
+            $.Huimodalalert('请填写角色名！', 2000)
+            return;
+        }
+        if (RoleAuthorize == "") {
+            $.Huimodalalert('请选择角色授权！', 2000)
+            return;
+        } 
+        $.ajax({
+            type: "POST",
+            url: "/SysManager/SysAdmin/AddRole",
+            data: {
+                RoleName: RoleName,
+                Description: Description,
+                RoleAuthorize: RoleAuthorize               
+            },
+            success: function (data) {
+                if (data.Result) {
+                    $.Huimodalalert('提交成功！', 2000)
+                } else {
+                    $.Huimodalalert(data.Msg, 2000)
+                }
+            }
+        });
+    }
+</script> 
